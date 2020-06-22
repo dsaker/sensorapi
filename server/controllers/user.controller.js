@@ -1,6 +1,6 @@
 let User = require('../models/user.model')
 let extend = require('lodash/extend')
-let errorHandler = require('./../helpers/dbErrorHandler').default
+let errorHandler = require('../helpers/dbErrorHandler').default
 
 const create = async (req, res) => {
   const user = new User(req.body)
