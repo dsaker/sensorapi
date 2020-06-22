@@ -1,38 +1,52 @@
-// Import express
-let express = require('express');
-// Import Body parser
-let bodyParser = require('body-parser');
-// Import Mongoose
-let mongoose = require('mongoose');
-// Initialise the app
-let app = express();
+let express = require('express')
+let path = require('path')
+let bodyParser = require('body-parser')
+let cookieParser = require('cookie-parser')
+let compress = require('compression')
+let cors = require('cors')
+let helmet = require('helmet')
+let userRoutes = require('./routes/user.routes')
+let authRoutes = require('./routes/auth.routes')
+let mongoose = require('mongoose')
+let config = require('./config.js')
 
-// Import routes
-let apiRoutes = require("./api-routes");
-// Configure bodyparser to handle post requests
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-app.use(bodyParser.json());
-// Connect to Mongoose and set connection variable
-mongoose.connect('mongodb://localhost/resthub', { useNewUrlParser: true});
-var db = mongoose.connection;
+// Connection URL
+mongoose.Promise = global.Promise
+mongoose.connect(config.mongoUri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true })
+mongoose.connection.on('error', () => {
+  throw new Error(`unable to connect to database: ${config.mongoUri}`)
+})
 
-// Added check for DB connection
-if(!db)
-    console.log("Error connecting db")
-else
-    console.log("Db connected successfully")
+const CURRENT_WORKING_DIR = process.cwd()
+const app = express()
 
-// Setup server port
-var port = process.env.PORT || 8080;
+// parse body params and attache them to req.body
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cookieParser())
+app.use(compress())
+// secure apps by setting various HTTP headers
+app.use(helmet())
+// enable CORS - Cross Origin Resource Sharing
+app.use(cors())
 
-// Send message for default URL
-app.get('/', (req, res) => res.send('Hello World with Express'));
+// mount routes
+app.use('/', userRoutes)
+app.use('/', authRoutes)
 
-// Use Api routes in the App
-app.use('/api', apiRoutes);
-// Launch app to listen to specified port
-app.listen(port, function () {
-    console.log("Running RestHub on port " + port);
-});
+// Catch unauthorised errors
+app.use((err, req, res, next) => {
+  if (err.name === 'UnauthorizedError') {
+    res.status(401).json({"error" : err.name + ": " + err.message})
+  } else if (err) {
+    res.status(400).json({"error" : err.name + ": " + err.message})
+    console.log(err)
+  }
+})
+
+app.listen(config.port, (err) => {
+  if (err) {
+    console.log(err)
+  }
+  console.info('Server started on port %s.', config.port)
+})
