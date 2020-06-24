@@ -34,6 +34,8 @@ app.use(cors())
 app.use('/', userRoutes)
 app.use('/', authRoutes)
 
+app.get('/', (req, res) => res.send("Hello World with Express"));
+
 // Catch unauthorised errors
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
