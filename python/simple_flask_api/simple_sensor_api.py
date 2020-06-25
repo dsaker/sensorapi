@@ -15,7 +15,7 @@ phoneNumber = passfile.readline().strip()
 email = passfile.readline().strip()
 passfile.close()
 
-sms_gateway = phoneNumber + 'messaging.sprintpcs.com'
+sms_gateway = phoneNumber + '@messaging.sprintpcs.com'
 
 smtp = "smtp.gmail.com"
 smtp_port = 587
@@ -32,7 +32,7 @@ def checkTemp(temp, sensorName, currentTime):
     msg['To'] = sms_gateway
 
     msg['Subject'] = "Alert from LoveLifeSensors\n"
-    body = sensorName + ': ' + temp
+    body = sensorName + ': ' + temp + ' F'
 
     msg .attach(MIMEText(body, 'plain'))
 
