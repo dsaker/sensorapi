@@ -10,7 +10,7 @@ lowTempAlert = 40
 def checkTemp(temp, sensorName, currentTime):
   if((currentTime - alertTriggered).total_seconds()/3600.0 > 6):
     
-    twilfile = open('./../../data/twilio', 'r')
+    twilfile = open('./../../data/words', 'r')
     words = json.loads(twilfile.read())
 
     client = Client(words['SID'], words['token'])
@@ -26,13 +26,19 @@ def checkTemp(temp, sensorName, currentTime):
 
 app = Flask(__name__)
 
-@app.route('/api', methods=["POST"])
+@app.route('/api', methods=["POST","GET"])
 def post():
-  content = request.get_json()
-  sensorName = content.get('sensorName')
-  temp = content.get('temp')
-  currentTime = datetime.now()
-  with open('./../../data/' + sensorName,  "a") as outfile:
-    json.dump({"time" : str(currentTime), "temp" : temp}, outfile)
-  checkTemp(temp, sensorName, currentTime)
-  return jsonify(str("Success"))
+  if request.method=='POST':
+    content = request.get_json()
+    sensorName = content.get('sensorName')
+    temp = content.get('temp')
+    currentTime = datetime.now()
+    with open('./../../data/' + sensorName,  "a") as outfile:
+      json.dump({"time" : str(currentTime), "temp" : temp}, outfile)
+    checkTemp(temp, sensorName, currentTime)
+    return jsonify(str("Success"))
+  else:
+    return jsonify(str("simple_api_twilio is responding to your request"))
+
+if __name__ == "__main__":
+  app.run(host='0.0.0.0')
