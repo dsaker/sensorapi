@@ -3,6 +3,8 @@
 #include <ArduinoJson.h>
 #include "DHTesp.h" //https://github.com/beegee-tokyo/DHTesp
 
+DHTesp dht;
+
 const char* ssid = "";
 const char* password = "";
 
@@ -11,6 +13,10 @@ DynamicJsonDocument postData(256);
 void setup() 
 {
   Serial.begin(115200);
+  
+  //setup DHT22 sensor
+  dht.setup(D2, DHTesp::DHT22);
+  
   WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED) 
@@ -18,11 +24,6 @@ void setup()
     delay(1000);
     Serial.println("Connecting...");
   }
-
-  //setup DHT22 sensor
-  dht.setup(D2, DHTesp::DHT22);
-  
-
 }
 
 void loop() 
@@ -49,6 +50,7 @@ void loop()
 
     http.end(); //Close connection
   }
-  
-  delay(6000);
+
+  //delay 5 minutes
+  delay(300000);
 }
