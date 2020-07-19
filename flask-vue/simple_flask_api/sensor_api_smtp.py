@@ -84,7 +84,7 @@ def post():
     humidity = content.get('humidity')
     currentTime = datetime.now()
     # append json object to data file
-    with open('./../../data/' + sensorName,  "a") as outfile:
+    with open('./../../data/' + sensorName,  "a+") as outfile:
       json.dump({"time" : str(currentTime), "temp" : temp, "humidity" : humidity}, outfile)
     checkTempHum(temp, humidity, sensorName, currentTime)
     return str("Success")
