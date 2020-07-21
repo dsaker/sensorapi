@@ -8,20 +8,32 @@ SENSORS = [
     {
         'id': uuid.uuid4().hex,
         'name': 'practice1',
-        'temperature': '70.0',
-        'humidity': '50.0'
+        'HTAlert': '90',
+        'LTAlert': '50',
+        'HHAlert': '70',
+        'LHAlert': '30',
+        'TempAlertOn': True,
+        'HumAlertOn': True
     },
     {
         'id': uuid.uuid4().hex,
         'name': 'practice2',
-        'temperature': '80.0',
-        'humidity': '70.0'
+        'HTAlert': '90',
+        'LTAlert': '50',
+        'HHAlert': '70',
+        'LHAlert': '30',
+        'TempAlertOn': True,
+        'HumAlertOn': True
     },
     {
         'id': uuid.uuid4().hex,
         'name': 'practice3',
-        'temperature': '90.0',
-        'humidity': '100.0'
+        'HTAlert': '90',
+        'LTAlert': '50',
+        'HHAlert': '70',
+        'LHAlert': '30',
+        'TempAlertOn': True,
+        'HumAlertOn': True
     }
 ]
 
@@ -58,8 +70,12 @@ def all_sensors():
         SENSORS.append({
             'id': uuid.uuid4().hex,
             'name': post_data.get('name'),
-            'temperature': post_data.get('temperature'),
-            'humidity': post_data.get('humidity')
+            'HTAlert': post_data.get('HTAlert'),
+            'LTAlert': post_data.get('LTAlert'),
+            'HHAlert': post_data.get('HHAlert'),
+            'LHAlert': post_data.get('LHAlert'),
+            'TempAlertOn': post_data.get('TempAlertOn'),
+            'HumAlertOn': post_data.get('HumAlertOn')
         })
         response_object['message'] = 'sensor added!'
     else:
@@ -76,8 +92,12 @@ def single_sensor(sensor_id):
         SENSORS.append({
             'id': uuid.uuid4().hex,
             'name': post_data.get('name'),
-            'temperature': post_data.get('temperature'),
-            'humidity': post_data.get('humidity')
+            'HTAlert': post_data.get('HTAlert'),
+            'LTAlert': post_data.get('LTAlert'),
+            'HHAlert': post_data.get('HHAlert'),
+            'LHAlert': post_data.get('LHAlert'),
+            'TempAlertOn': post_data.get('TempAlertOn'),
+            'HumAlertOn': post_data.get('HumAlertOn')
         })
         response_object['message'] = 'sensor updated!'
     if request.method == 'DELETE':
