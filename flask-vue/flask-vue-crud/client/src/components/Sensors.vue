@@ -13,10 +13,10 @@
           <thead>
             <tr>
               <th scope="col">Name</th>
-              <th scope="col">High Temp Alert Set</th>
-              <th scope="col">Low Temp Alert Set</th>
-              <th scope="col">High Humidity Alert Set</th>
-              <th scope="col">Low Humidity Alert Set</th>
+              <th scope="col">High Temp Alert</th>
+              <th scope="col">Low Temp Alert</th>
+              <th scope="col">High Humidity Alert</th>
+              <th scope="col">Low Humidity Alert</th>
               <th scope="col">Temp Alert On</th>
               <th scope="col">Humidity Alert on</th>
               <th></th>

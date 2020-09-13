@@ -1,3 +1,5 @@
+'''docstring goes here'''
+
 import uuid
 
 from flask import Flask, jsonify, request
@@ -49,6 +51,8 @@ CORS(app, resources={r'/*': {'origins': '*'}})
 
 
 def remove_sensor(sensor_id):
+    '''function docstring goes here'''
+
     for sensor in SENSORS:
         if sensor['id'] == sensor_id:
             SENSORS.remove(sensor)
@@ -59,11 +63,14 @@ def remove_sensor(sensor_id):
 # sanity check route
 @app.route('/ping', methods=['GET'])
 def ping_pong():
+    '''function docstring goes here'''
     return jsonify('pong!')
 
 
 @app.route('/sensors', methods=['GET', 'POST'])
 def all_sensors():
+    '''function docstring goes here'''
+
     response_object = {'status': 'success'}
     if request.method == 'POST':
         post_data = request.get_json()
@@ -85,6 +92,8 @@ def all_sensors():
 
 @app.route('/sensors/<sensor_id>', methods=['PUT', 'DELETE'])
 def single_sensor(sensor_id):
+    '''function docstring goes here'''
+
     response_object = {'status': 'success'}
     if request.method == 'PUT':
         post_data = request.get_json()
