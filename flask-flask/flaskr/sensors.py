@@ -8,6 +8,7 @@ from flaskr.db import get_db
 
 bp = Blueprint('sensors', __name__)
 
+
 @bp.route('/')
 def index():
     db = get_db()
@@ -18,9 +19,41 @@ def index():
     return render_template('sensors/index.html', sensors=sensors)
 
 
+def get_sensor(id, check_creator=True):
+    """Get a sensor and its creator by id.
+    Checks that the id exists and optionally that the current user is
+    the creator.
+    :param id: id of sensor to get
+    :param check_creator: require the current user to be the creator
+    :return: the sensor with creator information
+    :raise 404: if a sensor with the given id doesn't exist
+    :raise 403: if the current user isn't the creatir
+    """
+    sensor = (
+        get_db()
+        .execute(
+            "SELECT s.id, creator_id, sensorname, ht_alert, lt_alert, hh_alert, lh_alert, \
+                temp_alert_on, hum_alert_on, time_between_alerts"
+            " FROM temp_sensor s JOIN user u ON s.creator_id = u.id"
+            " WHERE s.id = ?",
+            (id,),
+        )
+        .fetchone()
+    )
+
+    if sensor is None:
+        abort(404, "Sensor id {0} doesn't exist.".format(id))
+
+    if check_creator and sensor["creator_id"] != g.user["id"]:
+        abort(403)
+
+    return sensor
+
+
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
+    """Create a new sensor for the current user."""
     if request.method == 'POST':
         sensorname = request.form['sensorname']
         ht_alert = request.form['ht_alert']
@@ -43,13 +76,12 @@ def create():
                 'INSERT INTO temp_sensor (sensorname, ht_alert, lt_alert, hh_alert, \
                     lh_alert, temp_alert_on, hum_alert_on, time_between_alerts, creator_id)'
                 ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                (sensorname, ht_alert, lt_alert, hh_alert,
+                (sensorname, ht_alert, lt_alert, hh_alert, \
                     lh_alert, temp_alert, hum_alert, time_between, g.user["id"])
             )
             db.commit()
-            return redirect(url_for('sensor.index'))
-sensorname, ht_alert, lt_alert, hh_alert,
-                    lh_alert, temp_alert, hum_alert, time_between
+            return redirect(url_for('sensors.index'))
+
     return render_template('sensors/create.html')
 
 
@@ -57,7 +89,7 @@ sensorname, ht_alert, lt_alert, hh_alert,
 @login_required
 def update(id):
     """Update a sensor if the current user is the author."""
-    post = get_post(id)
+    sensor = get_sensor(id)
 
     if request.method == "POST":
         sensorname = request.form['sensorname']
@@ -78,8 +110,8 @@ def update(id):
         else:
             db = get_db()
             db.execute(
-                "UPDATE post SET sensorname = ?, ht_alert = ?, lt_alert = ? \
-                 hh_alert = ?, lh_alert = ? temp_alert_on = ? hum_alert_on = ? \
+                "UPDATE temp_sensor SET sensorname = ?, ht_alert = ?, lt_alert = ?, \
+                 hh_alert = ?, lh_alert = ?, temp_alert_on = ?, hum_alert_on = ?, \
                  time_between_alerts = ? WHERE id = ?", (sensorname, ht_alert, 
                     lt_alert, hh_alert, lh_alert, temp_alert, hum_alert, 
                     time_between, id)
@@ -87,7 +119,7 @@ def update(id):
             db.commit()
             return redirect(url_for("sensors.index"))
 
-    return render_template("sensors/update.html", post=post)
+    return render_template("sensors/update.html", sensor=sensor)
 
 
 @bp.route("/<int:id>/delete", methods=("POST",))
@@ -97,8 +129,8 @@ def delete(id):
     Ensures that the sensor exists and that the logged in user is the
     creator of the sensor.
     """
-    get_post(id)
+    get_sensor(id)
     db = get_db()
-    db.execute("DELETE FROM post WHERE id = ?", (id,))
+    db.execute("DELETE FROM temp_sensor WHERE id = ?", (id,))
     db.commit()
-    return redirect(url_for("blog.index"))
+    return redirect(url_for("sensors.index"))
