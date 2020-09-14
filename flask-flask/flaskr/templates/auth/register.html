@@ -11,13 +11,11 @@
             <label for="password">Password</label>
             <input type="password" name="password" id="password" required
               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-              title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters">>
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
-            <label for="phone">Phone</label>
-            <input type="phone" name="phone" id="phone" placeholder="555-555-5555"
-                                pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                                title="Must fit pattern 555-555-5555">
+              title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters">
+            <label for="phone">Number or Numbers to text on alert</label>
+            <input type="phone" name="phone" id="phone" placeholder="555-555-5555, 555-555-5555, ..."
+                                pattern="^(?:[0-9]{3}-[0-9]{3}-[0-9]{4}, )*[0-9]{3}-[0-9]{3}-[0-9]{4}$"
+                                title="Must fit pattern 555-555-5555, 555-555-5555, ...">
             <input type="submit" value="Register">
   </form>
 {% endblock %}

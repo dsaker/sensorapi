@@ -12,11 +12,16 @@
     <article class="post">
       <header>
         <div><h1>{{ sensor['sensorname'] }}</h1></div>
-        {% if g.user['id'] == sensor['creator_id'] %}
-          <a class="action" href="{{ url_for('sensors.update', id=sensor['id']) }}">Edit</a>
-        {% endif %}
       </header>
-      <p class="body">high temp alert: {{ sensor['ht_alert'] }}}</p>
+      <p class="body">high temp alert: {{ sensor['ht_alert'] }} - low temp alert: {{ sensor['lt_alert'] }} - 
+         high humidity alert: {{ sensor['hh_alert'] }} - low humidity alert: {{ sensor['lh_alert'] }} -  
+         temp alert: {% if sensor['temp_alert'] == 1 %} ON {% else %} OFF {% endif %} -  
+         humidity alert: {% if sensor['hum_alert'] == 1 %} ON {% else %} OFF {% endif %} -  
+         time between alerts: {{ sensor['time_between'] }} hours
+      </p>
+      {% if g.user['id'] == sensor['creator_id'] %}
+        <a class="action" href="{{ url_for('sensors.update', id=sensor['id']) }}">Edit</a>
+      {% endif %}
     </article>
     {% if not loop.last %}
       <hr>

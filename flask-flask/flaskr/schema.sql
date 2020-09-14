@@ -5,8 +5,7 @@ CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
-  email TEXT,
-  phonenumber TEXT
+  phonenumbers TEXT
 );
 
 CREATE TABLE temp_sensor (
@@ -17,8 +16,8 @@ CREATE TABLE temp_sensor (
     lt_alert INTEGER DEFAULT 50 NOT NULL,
     hh_alert INTEGER DEFAULT 80 NOT NULL,
     lh_alert INTEGER DEFAULT 40 NOT NULL, 
-    temp_alert_on INTEGER DEFAULT 1 NOT NULL,
-    hum_alert_on INTEGER DEFAULT 1 NOT NULL,
-    time_between_alerts INTEGER NOT NULL,
+    temp_alert INTEGER DEFAULT 1 NOT NULL,
+    hum_alert INTEGER DEFAULT 1 NOT NULL,
+    time_between INTEGER NOT NULL,
     FOREIGN KEY (creator_id) REFERENCES user (id)
 );

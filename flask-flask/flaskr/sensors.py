@@ -33,7 +33,7 @@ def get_sensor(id, check_creator=True):
         get_db()
         .execute(
             "SELECT s.id, creator_id, sensorname, ht_alert, lt_alert, hh_alert, lh_alert, \
-                temp_alert_on, hum_alert_on, time_between_alerts"
+                temp_alert, hum_alert, time_between"
             " FROM temp_sensor s JOIN user u ON s.creator_id = u.id"
             " WHERE s.id = ?",
             (id,),
@@ -74,7 +74,7 @@ def create():
             db = get_db()
             db.execute(
                 'INSERT INTO temp_sensor (sensorname, ht_alert, lt_alert, hh_alert, \
-                    lh_alert, temp_alert_on, hum_alert_on, time_between_alerts, creator_id)'
+                    lh_alert, temp_alert, hum_alert, time_between, creator_id)'
                 ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 (sensorname, ht_alert, lt_alert, hh_alert, \
                     lh_alert, temp_alert, hum_alert, time_between, g.user["id"])

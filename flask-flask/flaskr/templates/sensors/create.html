@@ -1,22 +1,22 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}New Senosr{% endblock %}</h1>
+  <h1>{% block title %}Create Sensor{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
   <form method="post">
     <label for="sensorname">Sensor Name</label>
     <input name="sensorname" id="sensorname" value="{{ request.form['sensorname'] }}" required>
-    <label for="ht_alert">High Temperautre Alert</label>
+    <label for="ht_alert">High Temperature Alert</label>
     <input type="number" min="0" max="100" name="ht_alert" id="ht_alert" value="{{ request.form['ht_alert'] }}" required>
-    <label for="lt_alert">Low Temperautre Alert</label>
+    <label for="lt_alert">Low Temperature Alert</label>
     <input type="number" min="0" max="100" name="lt_alert" id="lt_alert" value="{{ request.form['lt_alert'] }}" required>
     <label for="hh_alert">High Humidity Alert</label>
     <input type="number" min="0" max="100" name="hh_alert" id="hh_alert" value="{{ request.form['hh_alert'] }}" required>
     <label for="lh_alert">Low Humidity Alert</label>
     <input type="number" min="0" max="100" name="lh_alert" id="lh_alert" value="{{ request.form['lh_alert'] }}" required>
-    <label for="temp_alert">Temperautre Alert (0 = off, 1 = on)</label>
+    <label for="temp_alert">Temperature Alert (0 = off, 1 = on)</label>
     <input type="number" min="0" max="1" name="temp_alert" id="temp_alert" value="{{ request.form['temp_alert'] }}" required>
     <label for="hum_alert">Humidity Alert (0 = off, 1 = on)</label>
     <input type="number" min="0" max="1" name="hum_alert" id="hum_alert" value="{{ request.form['hum_alert'] }}" required>
