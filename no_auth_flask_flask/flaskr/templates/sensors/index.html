@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Sensors{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  {% for sensor in sensors %}
+    <article class="post">
+      <header>
+        <div><h1>{{ sensor['sensorname'] }}</h1></div>
+      </header>
+      <p class="body">high temp alert: {{ sensor['ht_alert'] }} - low temp alert: {{ sensor['lt_alert'] }} - 
+         high humidity alert: {{ sensor['hh_alert'] }} - low humidity alert: {{ sensor['lh_alert'] }} -  
+         temp alert: {% if sensor['temp_alert'] == 1 %} ON {% else %} OFF {% endif %} -  
+         humidity alert: {% if sensor['hum_alert'] == 1 %} ON {% else %} OFF {% endif %} -  
+         time between alerts: {{ sensor['time_between'] }} hours
+      </p>
+      <a class="action" href="{{ url_for('sensors.update', id=sensor['id']) }}">Edit</a>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}

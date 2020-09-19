@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Edit "{{ sensor['sensorname'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="sensorname">Sensor Name</label>
+    <input name="sensorname" id="sensorname" value="{{ request.form['sensorname'] or sensor['sensorname'] }}" required>
+    <label for="ht_alert">High Temperautre Alert</label>
+    <input type="number" min="0" max="100" name="ht_alert" id="ht_alert" 
+        value="{{ request.form['ht_alert'] or sensor['ht_alert'] }}" required>
+    <label for="lt_alert">Low Temperautre Alert</label>
+    <input type="number" min="0" max="100" name="lt_alert" id="lt_alert"
+        value="{{ request.form['lt_alert'] or sensor['lt_alert'] }}" required>
+    <label for="hh_alert">High Humidity Alert</label>
+    <input type="number" min="0" max="100" name="hh_alert" id="hh_alert" 
+        value="{{ request.form['hh_alert'] or sensor['hh_alert'] }}" required>
+    <label for="lh_alert">Low Humidity Alert</label>
+    <input type="number" min="0" max="100" name="lh_alert" id="lh_alert" 
+        value="{{ request.form['lh_alert'] or sensor['lh_alert'] }}" required>
+    <label for="temp_alert">Temperautre Alert (0 = off, 1 = on)</label>
+    <input type="number" min="0" max="1" name="temp_alert" id="temp_alert" 
+        value="{{ request.form['temp_alert'] or sensor['temp_alert_on'] }}" required>
+    <label for="hum_alert">Humidity Alert (0 = off, 1 = on)</label>
+    <input type="number" min="0" max="1" name="hum_alert" id="hum_alert" 
+        value="{{ request.form['hum_alert'] or sensor['hum_alert_on'] }}" required>
+    <label for="time_between">Time Between Alerts (in hours, 0 = every 5 min)</label>
+    <input type="number" min="0" max="24" name="time_between" id="time_between" 
+        value="{{ request.form['time_between'] or sensor['time_between'] }}" required>
+    <input type="submit" value="Save">
+  </form>
+  <hr>
+  <form action="{{ url_for('sensors.delete', id=sensor['id']) }}" method="post">
+    <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+  </form>
+{% endblock %}
