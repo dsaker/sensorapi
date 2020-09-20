@@ -5,15 +5,29 @@
 {% endblock %}
 
 {% block content %}
+  {% if creds %}
+    <article class="row">
+      <header>
+        <div><h1>{{ creds['gmail'] }} - Password: *******</h1></div>
+      </header>
+      <a class="action" href="{{ url_for('contact.update') }}">Edit</a>
+    </article>
+  {% else %}
+    <article class="row">
+      <p class="body">You mmust add an SMTP address (gmail) and password to the database.</p>
+      <a class="action" href="{{ url_for('contact.update') }}">Add</a>
+    </article>    
+  {% endif %}
+    <hr>
   {% for sensor in sensors %}
-    <article class="post">
+    <article class="row">
       <header>
         <div><h1>{{ sensor['sensorname'] }}</h1></div>
       </header>
       <p class="body">high temp alert: {{ sensor['ht_alert'] }} - low temp alert: {{ sensor['lt_alert'] }} - 
          high humidity alert: {{ sensor['hh_alert'] }} - low humidity alert: {{ sensor['lh_alert'] }} -  
-         temp alert: {% if sensor['temp_alert'] == 1 %} ON {% else %} OFF {% endif %} -  
-         humidity alert: {% if sensor['hum_alert'] == 1 %} ON {% else %} OFF {% endif %} -  
+         temp alert: {% if sensor['temp_alert_on'] == 1 %} ON {% else %} OFF {% endif %} -  
+         humidity alert: {% if sensor['hum_alert_on'] == 1 %} ON {% else %} OFF {% endif %} -  
          time between alerts: {{ sensor['time_between'] }} hours
       </p>
       <a class="action" href="{{ url_for('sensors.update', id=sensor['id']) }}">Edit</a>

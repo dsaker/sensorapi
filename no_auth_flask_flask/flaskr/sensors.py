@@ -36,11 +36,10 @@ def get_sensor(id):
 @bp.route('/')
 def index():
     db = get_db()
-    sensors = db.execute(
-        'SELECT *'
-        ' FROM temp_sensor'
-    ).fetchall()
-    return render_template('sensors/index.html', sensors=sensors)
+    sensors = db.execute( 'SELECT * FROM temp_sensor' ).fetchall()
+    creds = db.execute( 'SELECT * FROM smtp_creds' ).fetchone()
+    # numbers = db.execute( 'SELECT * FROM numbers' ).fetchall()
+    return render_template('sensors/index.html', sensors=sensors, creds=creds)
 
 
 @bp.route('/create', methods=('POST',))
@@ -60,8 +59,7 @@ def create():
             exists = (
                 get_db()
                 .execute(
-                    "SELECT id, sensorname, ht_alert, lt_alert, hh_alert, lh_alert, \
-                        temp_alert_on, hum_alert_on, time_between"
+                    "SELECT id"
                     " FROM temp_sensor"
                     " WHERE sensorname = ?",
                     (sensorname,),
