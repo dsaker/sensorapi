@@ -8,14 +8,35 @@
   {% if creds %}
     <article class="row">
       <header>
-        <div><h1>{{ creds['gmail'] }} - Password: *******</h1></div>
+        <div><h1>SMTP LOGIN CREDITIALS</h1></div>
       </header>
-      <a class="action" href="{{ url_for('contact.update') }}">Edit</a>
+      <p class="body">{{ creds['gmail'] }} Password: *****</p>
+      <a class="action" href="{{ url_for('contacts.update') }}">Edit</a>
     </article>
   {% else %}
     <article class="row">
       <p class="body">You mmust add an SMTP address (gmail) and password to the database.</p>
-      <a class="action" href="{{ url_for('contact.update') }}">Add</a>
+      <a class="action" href="{{ url_for('contacts.update') }}">Add</a>
+    </article>    
+  {% endif %}
+    <hr>
+  {% if contacts %}
+    <header>
+      <div><h1>Contact Numbers</h1></div>
+    </header>
+    {% for contact in contactss %}
+      <article class="row">
+        <p class="body">{{ contact['phonenumber'] }} : {{ contact['carrier'] }}</p>
+      </article>
+      {% if not loop.last %}
+      {% endif %}
+      <a class="action" href="{{ url_for('contacts.update') }}">Edit</a>  
+      <hr>
+    {% endfor %}
+  {% else %}
+    <article class="row">
+      <p class="body">You must add a contact if you want to receive alerts.</p>
+      <a class="action" href="{{ url_for('contacts.update') }}">Add</a>
     </article>    
   {% endif %}
     <hr>

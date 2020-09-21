@@ -2,44 +2,20 @@ from flask import (
     Blueprint, flash, redirect, render_template, request, url_for
 )
 from werkzeug.exceptions import abort
-from flaskr.db import get_db
+from flaskr.db import (
+    get_db, get_sensor_by_id, get_sensor_by_name, get_all
+)
 from json import loads
 
 bp = Blueprint('sensors', __name__)
 
 
-def get_sensor(id):
-    """Get a sensor.
-    Checks that the id exists
-    :param id: id of sensor to get
-    :return: the sensor
-    :raise 404: if a sensor with the given id doesn't exist
-    """
-    sensor = (
-        get_db()
-        .execute(
-            "SELECT s.id, sensorname, ht_alert, lt_alert, hh_alert, lh_alert, \
-                temp_alert_on, hum_alert_on, time_between"
-            " FROM temp_sensor s"
-            " WHERE s.id = ?",
-            (id,),
-        )
-        .fetchone()
-    )
-
-    if sensor is None:
-        abort(404, "Sensor id {0} doesn't exist.".format(id))
-
-    return sensor
-
-
 @bp.route('/')
 def index():
-    db = get_db()
-    sensors = db.execute( 'SELECT * FROM temp_sensor' ).fetchall()
-    creds = db.execute( 'SELECT * FROM smtp_creds' ).fetchone()
-    # numbers = db.execute( 'SELECT * FROM numbers' ).fetchall()
-    return render_template('sensors/index.html', sensors=sensors, creds=creds)
+    sensors = get_all('temp_sensor')
+    creds = get_all('smtp_creds')
+    contacts = get_all('contacts')
+    return render_template('sensors/index.html', sensors=sensors, creds=creds, contacts=contacts)
 
 
 @bp.route('/create', methods=('POST',))
@@ -56,18 +32,9 @@ def create():
         if error is not None:
             flash(error)
         else:
-            exists = (
-                get_db()
-                .execute(
-                    "SELECT id"
-                    " FROM temp_sensor"
-                    " WHERE sensorname = ?",
-                    (sensorname,),
-                )
-                .fetchone()
-            )
+            exists = get_sensor_by_name('sensorName')
             if exists:
-                return "sensorname already exists"
+                return "Sensorname already exists"
             else:
                 db =  get_db()
                 db.execute(
@@ -82,7 +49,7 @@ def create():
 @bp.route("/<int:id>/update", methods=("GET", "POST"))
 def update(id):
     """Update a sensor."""
-    sensor = get_sensor(id)
+    sensor = get_sensor_by_id(id)
 
     if request.method == "POST":
         sensorname = request.form['sensorname']
@@ -120,7 +87,6 @@ def delete(id):
     """Delete a sensor.
     Ensures that the sensor exists.
     """
-    get_sensor(id)
     db = get_db()
     db.execute("DELETE FROM temp_sensor WHERE id = ?", (id,))
     db.commit()

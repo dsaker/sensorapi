@@ -7,7 +7,7 @@ CREATE TABLE smtp_creds (
     pass TEXT NOT NULL
 );
 
-CREATE TABLE numbers (
+CREATE TABLE contacts (
     phonenumber TEXT NOT NULL,
     carrier TEXT NOT NULL
 );

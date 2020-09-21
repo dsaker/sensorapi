@@ -31,7 +31,10 @@ def create_app(test_config=None):
     app.register_blueprint(sensors.bp)
     app.add_url_rule('/', endpoint='index')
 
-    from . import contact
-    app.register_blueprint(contact.bp)
+    from . import contacts
+    app.register_blueprint(contacts.bp)
+
+    from . import temp_sensor
+    app.register_blueprint(temp_sensor.bp)
     
     return app
