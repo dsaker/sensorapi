@@ -20,7 +20,7 @@ def index():
 
 @bp.route('/create', methods=('POST',))
 def create():
-    """Create a new sensor when a sensor sends a post request with new sensorname."""
+    """Create a new sensor sends a post request with new sensorname."""
     if request.method == 'POST':
         content = loads(request.data)
         sensorname = content.get('sensorName')

@@ -109,6 +109,30 @@ def get_sensor_by_id(id):
     return sensor
 
 
+def get_smtp_by_id(id):
+    """Get smtp creds by id.
+    Checks that the id exists
+    :param id: id of creds to get
+    :return: the credentials
+    :raise 404: if a row with the given id doesn't exist
+    """
+    creds = (
+        get_db()
+        .execute(
+            "SELECT id, gmail"
+            " FROM smtp_creds"
+            " WHERE id = ?",
+            (id,),
+        )
+        .fetchone()
+    )
+
+    if creds is None:
+        abort(404, "SMPT creds {0} doesn't exist.".format(id))
+
+    return creds
+
+
 def update_sensor(column, value, id):
     """Update the temp_sensor table column with the value
     :param column: the column of temp_sensor to be updated

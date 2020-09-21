@@ -2,7 +2,7 @@ from flask import (
     Blueprint, flash, redirect, render_template, request, url_for, jsonify
 )
 from werkzeug.exceptions import abort
-from flaskr.db import get_db, get_all
+from flaskr.db import get_db, get_all, get_smtp_by_id
 from json import loads
 from datetime import datetime
 from json import loads, dump
@@ -15,22 +15,30 @@ bp = Blueprint('contacts', __name__, url_prefix='/contacts')
 
 @bp.route('/update')
 def update():
-    '''
+
+    creds = get_all('smtp_creds')
+    contacts = get_all('contacts')
+    return render_template("contacts/update.html", creds=creds, contacts=contacts)
+
+@bp.route('/<int:id>/update_smtp', methods=("GET", "POST"))
+def update_smtp():
+    '''update smtp credentials'''
+    creds = get_smtp_by_id(id)
+
     if request.method == 'POST':
         gmail = request.form['gmail']
         password = request.form['password']
-        db = get_db()
         error = None
 
         if not gmail:
             error = 'Gmail is required.'
         elif not password:
             error = 'Password is required.'
-        elif error is not none:
+        
+        if error is not none:
             flash(error)
-        elif db.execute(
-                'SELECT id FROM smtp_creds WHERE gmail = ?', (gmail,)
-            ).fetchone() is not None:
+        else:
+            db = get_db()
                 db.execute(
                     "UPDATE smtp_creds SET gmail = ?, password = ?", 
                     (gmail, password)
@@ -44,6 +52,6 @@ def update():
             )
             db.commit()
             return redirect(url_for('sensors.index'))'''
-    creds = get_all('smpt_creds')
+    creds = get_all('smtp_creds')
     contacts = get_all('contacts')
-    return render_template("contact/update.html", creds=creds, contacts=contacts)
+    return render_template("contacts/update.html", creds=creds, contacts=contacts)

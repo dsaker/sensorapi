@@ -11,12 +11,12 @@
         <div><h1>SMTP LOGIN CREDITIALS</h1></div>
       </header>
       <p class="body">{{ creds['gmail'] }} Password: *****</p>
-      <a class="action" href="{{ url_for('contacts.update') }}">Edit</a>
+      <a class="action" href="{{ url_for('contacts.update_smtp') }}">Edit</a>
     </article>
   {% else %}
     <article class="row">
-      <p class="body">You mmust add an SMTP address (gmail) and password to the database.</p>
-      <a class="action" href="{{ url_for('contacts.update') }}">Add</a>
+      <p class="body">You mmust add an SMTP address (gmail) and password to receive alerts.</p>
+      <a class="action" href="{{ url_for('contacts.add_smtp') }}">Add</a>
     </article>    
   {% endif %}
     <hr>
